@@ -76,6 +76,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="output.txt" />
+    <Text Include="output_10.txt" />
+    <Text Include="output_11.txt" />
+    <Text Include="output_12.txt" />
+    <Text Include="output_2.txt" />
+    <Text Include="output_3.txt" />
+    <Text Include="output_5.txt" />
+    <Text Include="output_6.txt" />
+    <Text Include="output_7.txt" />
+    <Text Include="output_8.txt" />
+    <Text Include="output_9.txt" />
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
