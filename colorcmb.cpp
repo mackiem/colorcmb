@@ -1,3 +1,21 @@
+/*
+Copyright (c) 2015 C. D. Tharindu Mathew
+http://mackiemathew.wordpress.com
+
+This project is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/agpl-3.0.html>.
+*/
+
 // colorcmb.cpp : Defines the entry point for the console application.
 //
 
@@ -7,6 +25,7 @@
 #include <set>
 #include <algorithm>
 #include <fstream>
+#include <string>
 
 bool cmp(std::set<long> a, std::set<long> b) {
 	return (a.size() < b.size());
@@ -50,20 +69,26 @@ void test() {
 
 int main(int argc, char** argv) {
 	const int thr = 12;
-	const int numsLen = 7;
+	const int numsLen = 1;
 	unsigned long max = std::pow(2, thr);
 	std::set<std::set<long>> combs;
 	std::ofstream file;
-	file.open("output.txt");
+	std::string fileName("output_" + std::to_string(thr) + ".txt");
+	file.open(fileName, std::ios::app);
 	std::cout << pow(2, thr) << std::endl;
 	file << pow(2, thr) << std::endl;
 	
-	for (unsigned long i = 1; i < max; ++i) {
+	for (unsigned long i = 35; i < max; ++i) {
 		std::set<long> nums;
 		nums.insert(i);
-		for (unsigned long j = i; j < max; ++j) {
+		int lastNumInserted = 0;
+		for (unsigned long j = i; (j < max && j < i + 60); ++j) {
 			int total = 0;
-			for (int k = nums.size(); k >= 1; --k) {
+			//std::cout << "n and k" << j << " " << nums.size() << " " << std::ceil(((nums.size() + 1) / 2));
+			for (int k = nums.size(); k >= 1; k--) { 
+			// int l = nums.size();
+			//for (int k = nums.size(); k >= (l + 1)/2; k--) { // can't do this, even though the number is the same, the addition is different
+				std::cout << k << " ";
 				long* arr = new long[k];
 				total += recAdd(nums, nums.size(), k, j, arr, k);
 				delete[] arr;
@@ -75,7 +100,13 @@ int main(int argc, char** argv) {
 					numTot += x;
 				}
 				if (numTot <= max) {
+					lastNumInserted = j;
 					nums.insert(j);
+				}
+			}
+			else {
+				if ((lastNumInserted != 0) && (lastNumInserted + 1 <= j)) {
+					break;
 				}
 			}
 		}
@@ -83,12 +114,11 @@ int main(int argc, char** argv) {
 			combs.insert(nums);
 			for (auto &x : nums) {
 				std::cout << x << ",";
-				file << x << ",";
+				//file << x << ",";
 			}
 		}
-		//if (i % 100 == 0) {
+			//file << "at iteration: " << i << std::endl;
 			std::cout << "at iteration: " << i << std::endl;
-		//}
 	}
     
 
@@ -141,12 +171,14 @@ int main(int argc, char** argv) {
 		std::cout << std::endl;
 		file << std::endl;
 	}
-	auto maxNums = std::max_element(combs.begin(), combs.end(), cmp);
-	std::cout << "max vec: " << (*maxNums).size() << std::endl;
-	file << "max vec: " << (*maxNums).size() << std::endl;
-	for (auto &x : (*maxNums)) {
-		std::cout << x << ",";
-		file << x << ",";
+	if (combs.size() > 0) {
+		auto maxNums = std::max_element(combs.begin(), combs.end(), cmp);
+		std::cout << "max vec: " << (*maxNums).size() << std::endl;
+		file << "max vec: " << (*maxNums).size() << std::endl;
+		for (auto &x : (*maxNums)) {
+			std::cout << x << ",";
+			file << x << ",";
+		}
 	}
 
 	std::cout << std::endl;
